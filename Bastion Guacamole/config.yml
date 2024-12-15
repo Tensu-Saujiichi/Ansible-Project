@@ -1,14 +1,20 @@
-- name: Deploy guacamole.war
-  copy:
-    src: files/guacamole.war
-    dest: /var/lib/tomcat9/webapps/guacamole.war
+---
+- name: Install and Configure Splunk
+  hosts: guacamole_servers
+  become: true
 
-- name: Configure guacamole.properties
-  template:
-    src: templates/guacamole.properties.j2
-    dest: /etc/guacamole/guacamole.properties
+  - tasks:
+    - name: Deploy guacamole.war
+      copy:
+        src: files/guacamole.war
+        dest: /var/lib/tomcat9/webapps/guacamole.war
 
-- name: Restart Tomcat
-  service:
-    name: tomcat9
-    state: restarted
+    - name: Configure guacamole.properties
+      template:
+        src: templates/guacamole.properties.j2
+        dest: /etc/guacamole/guacamole.properties
+
+    - name: Restart Tomcat
+      service:
+        name: tomcat9
+        state: restarted
