@@ -3,5 +3,11 @@
   hosts: all
   become: true
 
-
-
+  tasks:
+    - name: Mettre a jour les paquets
+      apt:
+        name: "*"
+        update_cache: yes
+        state: latest
+        autoclean: yes
+        autoremove: yes
