@@ -13,9 +13,10 @@
     - name: Installation indepedence
       apt:
         name: "{{ item }}"
-        state: present
+        state: latest
       loop:
         - wget
+        - curl
         - apt-transport-https
 
     - name: Installation Splunk Forwarder package
@@ -51,7 +52,7 @@
     - name: Verif Suricata est installe
       apt:
         name: suricata
-        state: present
+        state: latest
 
     - name: Configuration de HOME_NET dans Suricata
       lineinfile:
