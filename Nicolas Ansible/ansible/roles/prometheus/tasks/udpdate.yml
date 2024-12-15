@@ -1,0 +1,16 @@
+---
+- name: Install and Configure Splunk
+  hosts: prometheus_servers
+  become: true
+
+  tasks:
+    - name: Update Packages
+      apt:
+        name: ["wget", "curl"]
+        state: latest
+
+    - name: Start Splunk service
+      service:
+        name: splunk
+        state: started
+        enabled: true
