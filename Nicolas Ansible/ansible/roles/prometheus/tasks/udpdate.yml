@@ -4,13 +4,10 @@
   become: true
 
   tasks:
-    - name: Update Packages
+    - name: Mettre a jour les paquets
       apt:
-        name: ["wget", "curl"]
+        name: "*"
+        update_cache: yes
         state: latest
-
-    - name: Start Splunk service
-      service:
-        name: splunk
-        state: started
-        enabled: true
+        autoclean: yes
+        autoremove: yes
