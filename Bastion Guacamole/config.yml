@@ -1,0 +1,14 @@
+- name: Deploy guacamole.war
+  copy:
+    src: files/guacamole.war
+    dest: /var/lib/tomcat9/webapps/guacamole.war
+
+- name: Configure guacamole.properties
+  template:
+    src: templates/guacamole.properties.j2
+    dest: /etc/guacamole/guacamole.properties
+
+- name: Restart Tomcat
+  service:
+    name: tomcat9
+    state: restarted
