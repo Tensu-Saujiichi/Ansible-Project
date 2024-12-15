@@ -10,7 +10,7 @@
     - name: Installer Suricata
       apt:
         name: suricata
-        state: present
+        state: latest
 
     - name: Configurer HOME_NET dans suricata.yaml
       lineinfile:
@@ -29,3 +29,8 @@
 
     - name: Verifier installation de Suricata
       command: suricata --build-info
+
+    - name: Rdedemarrage de suricata
+      service:
+        name: suricata
+        state: restarted
