@@ -1,0 +1,7 @@
+---
+- name: Install and Configure Splunk
+  hosts: all
+  become: true
+
+
+
