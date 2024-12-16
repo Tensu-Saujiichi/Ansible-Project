@@ -1,21 +1,21 @@
 ---
-- name: Update package list
-  apt:
-    update_cache: yes
+- name: Install and configure all things used and Necessary for Snort
+  hosts: snort_servers
+  become: yes
 
-  - tasks:
-    - name: include install task
-      include_tasks: 
-        file: install.yml
+  tasks:
+  - name: include install task
+    include_tasks: 
+      file: install.yml
 
-    - name: include install task
-      include_tasks: 
-        file: daq.yml
+  - name: include install task
+    include_tasks: 
+      file: daq.yml
 
-    - name: include install task
-      include_tasks: 
-        file: database_config.yml
-        
-    - name: include install task
-      include_tasks: 
-        file: snort_config.yml
+  - name: include install task
+    include_tasks: 
+      file: database_config.yml
+      
+  - name: include install task
+    include_tasks: 
+      file: snort_config.yml
