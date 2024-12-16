@@ -3,47 +3,47 @@
   hosts: snort_servers
   become: yes
 
-  - tasks:
-    - name: Installation Dependecies
-      apt:
-        name:
-          - build-essential
-          - libpcap-dev
-          - libpcre3-dev
-          - libdumbnet-dev
-          - zlib1g-dev
-          - bison
-          - flex
-        state: latest
+  tasks:
+  - name: Installation Dependecies
+    apt:
+      name:
+        - build-essential
+        - libpcap-dev
+        - libpcre3-dev
+        - libdumbnet-dev
+        - zlib1g-dev
+        - bison
+        - flex
+      state: latest
 
-    - name: Install Apache, PHP, and MariaDB
-      apt:
-        name:
-          - apache2
-          - php
-          - php-mysql
-          - libapache2-mod-php
-          - mariadb-server
-        state: latest
-        
-    - name: Install Python 3 and MySQL modules
-      apt:
-        name:
-          - python3
-          - python3-pip
-          - default-libmysqlclient-dev
-        state: latest
-
-    - name: Install mysqlclient
-      pip:
-        name: mysqlclient
-        executable: pip3
-
-    - name: Start and enable Apache and MariaDB
-      systemd:
-        name: "{{ item }}"
-        state: started
-        enabled: yes
-      loop:
+  - name: Install Apache, PHP, and MariaDB
+    apt:
+      name:
         - apache2
-        - mariadb
+        - php
+        - php-mysql
+        - libapache2-mod-php
+        - mariadb-server
+      state: latest
+      
+  - name: Install Python 3 and MySQL modules
+    apt:
+      name:
+        - python3
+        - python3-pip
+        - default-libmysqlclient-dev
+      state: latest
+
+  - name: Install mysqlclient
+    pip:
+      name: mysqlclient
+      executable: pip3
+
+  - name: Start and enable Apache and MariaDB
+    systemd:
+      name: "{{ item }}"
+      state: started
+      enabled: yes
+    loop:
+      - apache2
+      - mariadb
