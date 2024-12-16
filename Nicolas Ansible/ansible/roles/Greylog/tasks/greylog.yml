@@ -2,9 +2,7 @@
 - name: Déploiement de Graylog avec ses dépendances
   hosts: 192.168.20.140
   become: yes
-
   vars:
-    # Configuration Graylog
     password_secret: "{{ lookup('password', '/dev/null length=96') }}"
     root_password_sha2: "{{ 'admin' | password_hash('sha256') }}"
     graylog_repo: "https://packages.graylog2.org/repo/debian/"
@@ -13,7 +11,6 @@
     elasticsearch_host: "http://localhost:9200"
 
   tasks:
-    # 1. Installer les dépendances
     - name: Mettre à jour le cache apt
       apt:
         update_cache: yes
@@ -26,7 +23,6 @@
           - pwgen
         state: present
 
-    # 2. Installer et configurer MongoDB
     - name: Ajouter le dépôt MongoDB
       apt_repository:
         repo: "deb [arch=amd64] https://repo.mongodb.org/apt/ubuntu focal/mongodb-org/4.4 multiverse"
@@ -43,7 +39,6 @@
         state: started
         enabled: yes
 
-    # 3. Installer et configurer Elasticsearch
     - name: Télécharger et installer Elasticsearch
       apt:
         name:
@@ -62,7 +57,6 @@
         state: started
         enabled: yes
 
-    # 4. Installer et configurer Graylog
     - name: Ajouter le dépôt Graylog
       apt_repository:
         repo: "deb {{ graylog_repo }} {{ graylog_version }}"
