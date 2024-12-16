@@ -48,15 +48,6 @@
       args:
         chdir: /opt/snort-2.9.20
 
-    - name: Start and enable Apache and MariaDB
-      systemd:
-        name: "{{ item }}"
-        state: started
-        enabled: yes
-      loop:
-        - apache2
-        - mariadb
-
 - name: Secure MariaDB Installation
   shell: |
     mysql -e "SET PASSWORD FOR 'root'@'localhost' = PASSWORD('rootpassword');"
