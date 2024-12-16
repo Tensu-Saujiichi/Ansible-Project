@@ -19,6 +19,6 @@ all:
       hosts: 192.168.20.140
       ansible_user: root
 
-  graylog_server:
+    graylog_server:
       hosts: 192.168.20.140
       ansible_user: root
