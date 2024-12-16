@@ -1,1 +1,93 @@
 ---
+- name: Déploiement de Graylog avec ses dépendances
+  hosts: 192.168.20.140
+  become: yes
+
+  vars:
+    # Configuration Graylog
+    password_secret: "{{ lookup('password', '/dev/null length=96') }}"
+    root_password_sha2: "{{ 'admin' | password_hash('sha256') }}"
+    graylog_repo: "https://packages.graylog2.org/repo/debian/"
+    graylog_version: "stable 4.0"
+    graylog_http_bind_address: "192.168.20.140:9000"
+    elasticsearch_host: "http://localhost:9200"
+
+  tasks:
+    # 1. Installer les dépendances
+    - name: Mettre à jour le cache apt
+      apt:
+        update_cache: yes
+
+    - name: Installer Java et outils nécessaires
+      apt:
+        name:
+          - openjdk-11-jre
+          - apt-transport-https
+          - pwgen
+        state: present
+
+    # 2. Installer et configurer MongoDB
+    - name: Ajouter le dépôt MongoDB
+      apt_repository:
+        repo: "deb [arch=amd64] https://repo.mongodb.org/apt/ubuntu focal/mongodb-org/4.4 multiverse"
+        state: present
+
+    - name: Installer MongoDB
+      apt:
+        name: mongodb-org
+        state: present
+
+    - name: Démarrer et activer MongoDB
+      service:
+        name: mongod
+        state: started
+        enabled: yes
+
+    # 3. Installer et configurer Elasticsearch
+    - name: Télécharger et installer Elasticsearch
+      apt:
+        name:
+          - elasticsearch
+        state: present
+
+    - name: Configurer Elasticsearch
+      lineinfile:
+        path: /etc/elasticsearch/elasticsearch.yml
+        regexp: "^#?network.host:"
+        line: "network.host: 192.168.20.140"
+
+    - name: Démarrer et activer Elasticsearch
+      service:
+        name: elasticsearch
+        state: started
+        enabled: yes
+
+    # 4. Installer et configurer Graylog
+    - name: Ajouter le dépôt Graylog
+      apt_repository:
+        repo: "deb {{ graylog_repo }} {{ graylog_version }}"
+        state: present
+
+    - name: Installer Graylog
+      apt:
+        name: graylog-server
+        state: present
+
+    - name: Configurer Graylog (server.conf)
+      lineinfile:
+        path: /etc/graylog/server/server.conf
+        create: yes
+        regexp: "^{{ item.key }} ="
+        line: "{{ item.key }} = {{ item.value }}"
+      with_items:
+        - { key: "is_master", value: "true" }
+        - { key: "password_secret", value: "{{ password_secret }}" }
+        - { key: "root_password_sha2", value: "{{ root_password_sha2 }}" }
+        - { key: "http_bind_address", value: "{{ graylog_http_bind_address }}" }
+        - { key: "elasticsearch_hosts", value: "{{ elasticsearch_host }}" }
+
+    - name: Démarrer et activer Graylog
+      service:
+        name: graylog-server
+        state: started
+        enabled: yes
