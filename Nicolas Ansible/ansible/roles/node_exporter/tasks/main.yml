@@ -3,42 +3,42 @@
   become: yes
 
   tasks:
-    - name: install curl & wget
-        apt:
-        name:
-          - curl
-          - wget
-        state: latest
-        
-    - name: Get Node-exporter
+  - name: install curl & wget
+      apt:
+      name:
+        - curl
+        - wget
+      state: latest
+      
+  - name: Get Node-exporter
     ansible.builtin.shell: |
       curl -LO https://github.com/prometheus/node_exporter/releases/download/v1.6.1/node_exporter-1.6.1.linux-amd64.tar.gz
       tar -xzf node_exporter-1.6.1.linux-amd64.tar.gz
       mv node_exporter-1.6.1.linux-amd64/node_exporter /usr/local/bin/
 
-    - name: Create Node Exporter user and group
-      ansible.builtin.user:
-        name: node_exporter
-        shell: /usr/sbin/nologin
+  - name: Create Node Exporter user and group
+    ansible.builtin.user:
+      name: node_exporter
+      shell: /usr/sbin/nologin
 
-    - name: Configure Node Exporter as a service
-      ansible.builtin.copy:
-        dest: /etc/systemd/system/node_exporter.service
-        content: |
-          [Unit]
-          Description=Node Exporter
-          After=network.target
+  - name: Configure Node Exporter as a service
+    ansible.builtin.copy:
+      dest: /etc/systemd/system/node_exporter.service
+      content: |
+        [Unit]
+        Description=Node Exporter
+        After=network.target
 
-          [Service]
-          User=node_exporter
-          ExecStart=/usr/local/bin/node_exporter
+        [Service]
+        User=node_exporter
+        ExecStart=/usr/local/bin/node_exporter
 
-          [Install]
-          WantedBy=multi-user.target
+        [Install]
+        WantedBy=multi-user.target
 
-    - name: Reload systemd and start Node Exporter
-      ansible.builtin.systemd:
-        daemon_reload: yes
-        name: node_exporter
-        enabled: yes
-        state: started
+  - name: Reload systemd and start Node Exporter
+    ansible.builtin.systemd:
+      daemon_reload: yes
+      name: node_exporter
+      enabled: yes
+      state: started
