@@ -1,0 +1,12 @@
+---
+ - name: Configure graylog
+   hosts: graylog_servers
+   become: true
+   vars:
+    # Configuration Graylog
+    password_secret: "{{ lookup('password', '/dev/null length=96') }}"
+    root_password_sha2: "{{ 'admin' | password_hash('sha256') }}"
+    graylog_repo: "https://packages.graylog2.org/repo/debian/"
+    graylog_version: "stable 4.0"
+    graylog_http_bind_address: "192.168.20.140:9000"
+    elasticsearch_host: "http://localhost:9200"
