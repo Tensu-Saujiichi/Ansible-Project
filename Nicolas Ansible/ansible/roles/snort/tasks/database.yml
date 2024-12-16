@@ -1,4 +1,4 @@
 ---
-- name: Install and Configure Splunk
+- name: Configure Databases for Snort
   hosts: snort_servers
   become: true
