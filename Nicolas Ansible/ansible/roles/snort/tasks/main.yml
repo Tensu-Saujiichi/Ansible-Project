@@ -8,45 +8,14 @@
       include_tasks: 
         file: install.yml
 
-    
-    - name: Download DAQ
-      get_url:
-        url: https://www.snort.org/downloads/snort/daq-2.0.7.tar.gz
-        dest: /tmp/daq-2.0.7.tar.gz
+    - name: include install task
+      include_tasks: 
+        file: daq.yml
 
-    - name: Extract DAQ
-      unarchive:
-        src: /tmp/daq-2.0.7.tar.gz
-        dest: /tmp/
-        remote_src: yes
-
-    - name: Compile and install DAQ
-      command: >
-        /bin/bash -c "./configure && make && make install"
-      args:
-        chdir: /tmp/daq-2.0.7
-
-    - name: Download Snort source
-      get_url:
-        url: https://www.snort.org/downloads/snort/snort-2.9.20.tar.gz
-        dest: /tmp/snort.tar.gz
-
-    - name: Extract Snort
-      unarchive:
-        src: /tmp/snort.tar.gz
-        dest: /opt
-        remote_src: yes
-
-    - name: Check if GCC is installed
-      command: gcc --version
-      register: gcc_check
-      failed_when: gcc_check.rc != 0
-
-    - name: Compile and install Snort (without OpenAppId)
-      command: >
-        /bin/bash -c "./configure --disable-open-appid && make && make install"
-      args:
-        chdir: /opt/snort-2.9.20
-
-
-
+    - name: include install task
+      include_tasks: 
+        file: database_config.yml
+        
+    - name: include install task
+      include_tasks: 
+        file: snort_config.yml
