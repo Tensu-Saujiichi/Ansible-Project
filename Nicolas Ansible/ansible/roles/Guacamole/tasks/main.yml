@@ -1,1 +1,13 @@
 ---
+- name: Install and Configure Splunk
+  hosts: guacamole_servers
+  become: true
+
+  - tasks:
+    name: Include task Install Guacamole
+    include_tasks:
+      file: install.yml
+      
+    name: Include task Config Guacamole
+    include_task: 
+      file: config.yml
