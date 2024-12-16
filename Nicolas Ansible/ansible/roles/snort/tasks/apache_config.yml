@@ -1,12 +1,11 @@
-
-- name: Set Apache permissions
-  file:
-    path: /var/www/html/base-1.4.5
-    state: directory
-    mode: "0755"
-    owner: www-data
-    group: www-data
-- name: Restart Apache
-  systemd:
-    name: apache2
-    state: restarted
+#- name: Set Apache permissions
+#  file:
+#    path: /var/www/html/base-1.4.5
+#    state: directory
+#    mode: "0755"
+#    owner: www-data
+#    group: www-data
+#- name: Restart Apache
+#  systemd:
+#    name: apache2
+#    state: restarted
