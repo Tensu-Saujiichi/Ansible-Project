@@ -1,10 +1,11 @@
+---
 - name: Installation et configuration de Suricata
   hosts: suricata_server
   become: yes
 
   tasks:
     - name: Mettre a jour les paquets
-      apt:
+      apt:      
         update_cache: yes
 
     - name: Installer Suricata
