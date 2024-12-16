@@ -1,5 +1,5 @@
 ---
-- name: Install and Configure Splunk
+- name: Install and Configure Guacamole
   hosts: guacamole_servers
   become: true
 
