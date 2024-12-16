@@ -1,0 +1,36 @@
+---
+- name: Configuration for snort
+  hosts: snort_servers
+  become: yes
+
+  - tasks:
+    - name: Create Snort configuration directory
+      file:
+        path: /etc/snort
+        state: directory
+
+    - name: Copy Snort configuration file
+      template:
+        src: snort.conf.j2
+        dest: /etc/snort/snort.conf
+
+    - name: Enable Snort as a service
+      copy:
+        content: |
+          [Unit]
+          Description=Snort Daemon
+          After=network.target
+
+          [Service]
+          ExecStart=/usr/local/bin/snort -c /etc/snort/snort.conf -i ens33
+          Restart=always
+
+          [Install]
+          WantedBy=multi-user.target
+        dest: /etc/systemd/system/snort.service
+
+    - name: Start and enable Snort
+      systemd:
+        name: snort
+        enabled: yes
+        state: started
