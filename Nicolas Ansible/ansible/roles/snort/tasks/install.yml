@@ -38,4 +38,12 @@
       pip:
         name: mysqlclient
         executable: pip3
-        
+
+    - name: Start and enable Apache and MariaDB
+      systemd:
+        name: "{{ item }}"
+        state: started
+        enabled: yes
+      loop:
+        - apache2
+        - mariadb
