@@ -1,1 +1,20 @@
 ---
+- name: Configure Guacamole
+  hosts: guacamole_servers
+  become: true
+
+  - tasks:
+    - name: Deploy guacamole.war
+      get_url:
+        url: "https://downloads.apache.org/guacamole/{{ guacamole_version }}/binary/guacamole-{{ guacamole_version }}.war"
+        dest: /var/lib/tomcat9/webapps/guacamole.war
+
+    - name: Configure guacamole.properties
+      template:
+        src: templates/guacamole.properties.j2
+        dest: /etc/guacamole/guacamole.properties
+
+    - name: Restart Tomcat
+      service:
+        name: tomcat9
+        state: restarted
