@@ -1,12 +1,12 @@
----
-- name: Install and Configure Splunk
-  hosts: guacamole_servers
-  become: true
-
-  - tasks:
-    - name: Deploy Apache Guacamole
-    hosts: guacamole_servers
-    become: true
+#---
+#- name: Install and Configure Splunk
+#  hosts: guacamole_servers
+#  become: true
+#
+#  - tasks:
+#    - name: Deploy Apache Guacamole
+#    hosts: guacamole_servers
+#    become: true
 
     ###roles:
       ###- guacamole
