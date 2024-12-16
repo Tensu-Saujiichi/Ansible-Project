@@ -2,6 +2,7 @@
 - name: Install and Configure Splunk
   hosts: prometheus_servers
   become: true
+  gather_facts: true
 
   tasks:
   - name: Mettre a jour les paquets
