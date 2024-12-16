@@ -14,3 +14,7 @@ all:
       ansible_password: root 
       ansible_become: true
       ansible_become_method: sudo
+
+    guacamole_server:
+      hosts: 192.168.20.140
+      ansible_user: root
