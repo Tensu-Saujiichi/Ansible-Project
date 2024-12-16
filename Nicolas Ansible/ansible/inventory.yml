@@ -22,3 +22,9 @@ all:
     graylog_server:
       hosts: 192.168.20.140
       ansible_user: root
+
+#################
+
+guacamole_server:
+  hosts: 192.168.20.140
+      ansible_user: root
