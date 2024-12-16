@@ -3,7 +3,7 @@
   hosts: snort_servers
   become: true
 
-- tasks:
+  tasks:
   - name: Secure MariaDB Installation
     shell: |
       mysql -e "SET PASSWORD FOR 'root'@'localhost' = PASSWORD('rootpassword');"
