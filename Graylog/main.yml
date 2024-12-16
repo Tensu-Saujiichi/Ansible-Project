@@ -1,0 +1,12 @@
+---
+ - name: Configure graylog
+   hosts: graylog_servers
+   become: true
+- tasks:
+    name: Include task Install Graylog
+    include_tasks:
+      file: install.yml
+      
+    name: Config Graylog
+    include_task: 
+      file: config.yml
