@@ -5,6 +5,8 @@
 
   - tasks:
     - name: Deploy guacamole.war
+    get_url:
+        url: "https://downloads.apache.org/guacamole/{{ guacamole_version }}/binary/guacamole-{{ guacamole_version }}.war"
       copy:
         src: files/guacamole.war
         dest: /var/lib/tomcat9/webapps/guacamole.war
