@@ -36,4 +36,31 @@
       dest: /var/www/html/
       remote_src: yes
 
-  
+  - name: Set Apache permissions
+  file:
+    path: /var/www/html/base-1.4.5
+    state: directory
+    mode: "0755"
+    owner: www-data
+    group: www-data
+
+  - name: Restart Apache
+    systemd:
+      name: apache2
+      state: restarted
+
+  - name: Configure Snort to log to database
+    lineinfile:
+      path: /etc/snort/snort.conf
+      insertafter: EOF
+      line: "output database: log, mysql, user=snort_user password=snortpassword dbname=snort host=localhost"
+
+  - name: Check BASE installation
+    uri:
+      url: "http://localhost/base"
+      return_content: yes
+    register: base_response
+
+  - name: Print BASE response
+    debug:
+      var: base_response.content
