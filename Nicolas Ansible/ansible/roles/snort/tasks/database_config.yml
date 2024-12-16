@@ -2,3 +2,37 @@
 - name: Configure Databases for Snort
   hosts: snort_servers
   become: true
+
+- name: Secure MariaDB Installation
+  shell: |
+    mysql -e "SET PASSWORD FOR 'root'@'localhost' = PASSWORD('rootpassword');"
+    mysql -e "DELETE FROM mysql.user WHERE User='';"
+    mysql -e "DELETE FROM mysql.db WHERE Db='test' OR Db='test\\_%';"
+    mysql -e "FLUSH PRIVILEGES;"
+  args:
+    executable: /bin/bash
+
+- name: Create Snort database
+  mysql_db:
+    name: snort
+    state: present
+
+- name: Create Snort database user
+  mysql_user:
+    name: snort_user
+    password: "snortpassword"
+    priv: "snort.*:ALL"
+    state: present
+
+- name: Download BASE
+  get_url:
+    url: https://sourceforge.net/projects/secureideas/files/latest/download/base-1.4.5.tar.gz
+    dest: /tmp/base-1.4.5.tar.gz
+
+- name: Extract BASE
+  unarchive:
+    src: /tmp/base-1.4.5.tar.gz
+    dest: /var/www/html/
+    remote_src: yes
+
+  
