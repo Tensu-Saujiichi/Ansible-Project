@@ -2,7 +2,7 @@
 - name: Install Node Exporter
   become: yes
 
-  - tasks:
+  tasks:
     - name: install curl & wget
         apt:
         name:
