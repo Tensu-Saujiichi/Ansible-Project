@@ -1,6 +1,6 @@
 ---
 - name: Install and Configure Splunk
-  hosts: all
+  hosts: client_machines
   become: true
 
   tasks:
