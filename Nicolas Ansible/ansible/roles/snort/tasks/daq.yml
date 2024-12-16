@@ -38,7 +38,6 @@
     failed_when: gcc_check.rc != 0
 
   - name: Compile and install Snort (without OpenAppId)
-    command: >
-      /bin/bash -c "./configure --disable-open-appid && make && make install"
+    command: /bin/bash -c "./configure --disable-open-appid && make && make install"
     args:
       chdir: /opt/snort-2.9.20
