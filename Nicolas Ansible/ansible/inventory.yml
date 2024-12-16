@@ -1,25 +1,35 @@
 all:
-  hosts:
-    snort_server:
-      ansible_host: localhost
-      ansible_user: root
-      ansible_become: true 
-      ansible_become_method: sudo 
-      ansible_become_password: root
-      ansible_python_interpreter: /usr/bin/python3
-
-    client_machine:
-      ansible_host: 192.168.153.129
-      ansible_user: root
-      ansible_password: root 
-      ansible_become: true
-      ansible_become_method: sudo
-
-    guacamole_server:
-      hosts: 192.168.20.140
-      ansible_user: root
-
-    graylog_server:
-      hosts: 192.168.20.140
-      ansible_user: root
-
+  children:
+    snort_servers:
+      hosts:
+        srv-snort01:
+            ansible_host: localhost
+            ansible_user: root
+            ansible_become: true 
+            ansible_become_method: sudo 
+            ansible_become_password: root
+            ansible_python_interpreter: /usr/bin/python3
+#    client_machines:
+#      ansible_host: 192.168.153.129
+#      ansible_user: root
+#      ansible_password: root 
+#      ansible_become: true
+#      ansible_become_method: sudo
+    guacamole_servers:
+      hosts:
+        srv-guacamole01:
+          ansible_host: 192.168.20.140
+          ansible_user: root
+    greylog_servers:
+      hosts: 
+        srv_greylog01:
+          ansible_host: 192.168.20.140
+          ansible_user: root
+    prometheus_servers:
+      hosts:
+        srv-pro01:
+          ansible_host: 192.168.20.141
+    splunk_servers:
+      hosts:
+        srv-splunk01:
+          ansible_host: 192.168.20.142
