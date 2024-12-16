@@ -1,0 +1,8 @@
+---
+- name: Install Packages for Snort
+  hosts: snort_servers
+  become: yes
+
+  - tasks:
+    - name: Installation of all packages
+    
