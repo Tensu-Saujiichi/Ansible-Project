@@ -1,6 +1,6 @@
 ---
 - name: Installation et configuration de Suricata
-  hosts: suricata_server
+  hosts: client_machines
   become: yes
 
   tasks:
