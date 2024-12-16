@@ -3,89 +3,89 @@
   apt:
     update_cache: yes
 
-- name: Install dependencies
-  apt:
-    name:
-      - build-essential
-      - libpcap-dev
-      - libpcre3-dev
-      - libdumbnet-dev
-      - zlib1g-dev
-      - bison
-      - flex
-    state: present
+  - tasks:
+    - name: Install dependencies
+      apt:
+        name:
+          - build-essential
+          - libpcap-dev
+          - libpcre3-dev
+          - libdumbnet-dev
+          - zlib1g-dev
+          - bison
+          - flex
+        state: latest
 
-- name: Download DAQ
-  get_url:
-    url: https://www.snort.org/downloads/snort/daq-2.0.7.tar.gz
-    dest: /tmp/daq-2.0.7.tar.gz
+    - name: Download DAQ
+      get_url:
+        url: https://www.snort.org/downloads/snort/daq-2.0.7.tar.gz
+        dest: /tmp/daq-2.0.7.tar.gz
 
-- name: Extract DAQ
-  unarchive:
-    src: /tmp/daq-2.0.7.tar.gz
-    dest: /tmp/
-    remote_src: yes
+    - name: Extract DAQ
+      unarchive:
+        src: /tmp/daq-2.0.7.tar.gz
+        dest: /tmp/
+        remote_src: yes
 
-- name: Compile and install DAQ
-  command: >
-    /bin/bash -c "./configure && make && make install"
-  args:
-    chdir: /tmp/daq-2.0.7
+    - name: Compile and install DAQ
+      command: >
+        /bin/bash -c "./configure && make && make install"
+      args:
+        chdir: /tmp/daq-2.0.7
 
+    - name: Download Snort source
+      get_url:
+        url: https://www.snort.org/downloads/snort/snort-2.9.20.tar.gz
+        dest: /tmp/snort.tar.gz
 
-- name: Download Snort source
-  get_url:
-    url: https://www.snort.org/downloads/snort/snort-2.9.20.tar.gz
-    dest: /tmp/snort.tar.gz
+    - name: Extract Snort
+      unarchive:
+        src: /tmp/snort.tar.gz
+        dest: /opt
+        remote_src: yes
 
-- name: Extract Snort
-  unarchive:
-    src: /tmp/snort.tar.gz
-    dest: /opt
-    remote_src: yes
+    - name: Check if GCC is installed
+      command: gcc --version
+      register: gcc_check
+      failed_when: gcc_check.rc != 0
 
-- name: Check if GCC is installed
-  command: gcc --version
-  register: gcc_check
-  failed_when: gcc_check.rc != 0
+    - name: Compile and install Snort (without OpenAppId)
+      command: >
+        /bin/bash -c "./configure --disable-open-appid && make && make install"
+      args:
+        chdir: /opt/snort-2.9.20
 
-- name: Compile and install Snort (without OpenAppId)
-  command: >
-    /bin/bash -c "./configure --disable-open-appid && make && make install"
-  args:
-    chdir: /opt/snort-2.9.20
+    - name: Install Python 3 and MySQL modules
+      apt:
+        name:
+          - python3
+          - python3-pip
+          - default-libmysqlclient-dev
+        state: latest
 
-- name: Install Python 3 and MySQL modules
-  apt:
-    name:
-      - python3
-      - python3-pip
-      - default-libmysqlclient-dev
-    state: present
+    - name: Install mysqlclient
+      pip:
+        name: mysqlclient
+        executable: pip3
 
-- name: Install mysqlclient
-  pip:
-    name: mysqlclient
-    executable: pip3
+    - name: Install Apache, PHP, and MariaDB
+      apt:
+        name:
+          - apache2
+          - php
+          - php-mysql
+          - libapache2-mod-php
+          - mariadb-server
+        state: latest
 
-- name: Install Apache, PHP, and MariaDB
-  apt:
-    name:
-      - apache2
-      - php
-      - php-mysql
-      - libapache2-mod-php
-      - mariadb-server
-    state: present
-
-- name: Start and enable Apache and MariaDB
-  systemd:
-    name: "{{ item }}"
-    state: started
-    enabled: yes
-  loop:
-    - apache2
-    - mariadb
+    - name: Start and enable Apache and MariaDB
+      systemd:
+        name: "{{ item }}"
+        state: started
+        enabled: yes
+      loop:
+        - apache2
+        - mariadb
 
 - name: Secure MariaDB Installation
   shell: |
