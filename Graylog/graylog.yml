@@ -1,3 +1,4 @@
+---
 - name: Déploiement de Graylog avec ses dépendances
   hosts: 192.168.20.140
   become: yes
