@@ -1,0 +1,35 @@
+---
+- name: configuration des properties et du fichier de conf
+  hosts: guacamole_servers
+  become: true
+  vars_file:
+
+  - tasks:
+    - name:
+      blockinfile:
+        path: /etc/guacamole/guacamole.properties
+        block: |
+          mysql-hostname: 127.0.0.1
+          mysql-port: 3306
+          mysql-database: "{{ sqldb }}"
+          mysql-username: "{{ sqluser }}"
+          mysql-password: "{{ sqluser_pwd }}"
+
+  - tasks:
+    - name:
+      blockinfile:
+        path: /etc/guacamole/guacd.conf
+        block: |
+          [server]
+          bind_host = 0.0.0.0
+          bind_port = 4822
+
+    - name: start mariadb
+      service:
+        name: "{{ item }}"
+        state: restarted
+      loop:
+        - tomcat9
+        - guacd
+        - mariadb
+

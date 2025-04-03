@@ -1,0 +1,33 @@
+---
+- name: Install and Configure Guacamole
+  hosts: guacamole_servers
+  become: true
+
+  - tasks:
+    - name: Include task Install Guacamole
+      include_tasks:
+        file: packages.yml
+
+    - name: Include task Config Guacamole
+      include_task:
+        file: init.yml
+
+    - name: Include task Config Guacamole
+      include_task:
+        file: install.yml
+
+    - name: Include task Config Guacamole
+      include_task:
+        file: install_tomcat.yml
+
+    - name: Include task Config Guacamole
+      include_task:
+        file: mariadb.yml
+
+    - name: Include task Config Guacamole
+      include_task:
+        file: extension.yml
+
+    - name: Include task Config Guacamole
+      include_task:
+        file: config.yml

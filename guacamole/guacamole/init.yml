@@ -1,0 +1,14 @@
+---
+- name: Init Guacamole
+  hosts: guacamole_servers
+  become: true
+    - name: Compile and install Guacamole server
+      command: ldconfig
+
+    - name: reload services
+      systemd_service:
+        state: restarted
+        daemon-reload: true
+        enabled: true
+        name: guacd
+

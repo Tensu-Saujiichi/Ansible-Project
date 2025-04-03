@@ -1,0 +1,69 @@
+---
+- name: Install Apache Guacamole
+  hosts: guacamole_servers
+  become: true
+  - tasks:
+#    - name: Update
+#      apt:
+#        state: latest
+
+#    - name: Update apt and install dependencies
+#      apt:
+#        name: "{{ item }}"
+#        state: latest
+#      loop:
+#        - build-essential
+#        - libcairo2-dev
+#        - libjpeg62-turbo-dev
+#        - libpng-dev
+#        - libtool-bin
+#        - uuid-dev
+#        - libossp-uuid-dev
+#        - libavcodec-dev
+#        - libavformat-dev
+#        - libavutil-dev
+#        - libswscale-dev
+#        - freerdp2-dev
+#        - libpango1.0-dev
+#        - libssh2-1-dev
+#        - libtelnet-dev
+#        - libvncserver-dev
+#        - libwebsockets-dev
+#        - libpulse-dev
+#        - libssl-dev
+#        - libvorbis-dev
+#        - libwebp-dev
+#        - ghostscript
+#        - wget
+#        - mysql-server
+
+    - name: Download Guacamole server source
+      get_url:
+        url: "https://downloads.apache.org/guacamole/1.5.5/source/guacamole-server-1.5.5.tar.gzhttps://downloads.apache.org/guacamole/1.5.5/source/guacamole-server-1.5.5.tar.gz"
+        dest: /tmp/guacamole-server.tar.gz
+
+    - name: Extract Guacamole server
+      unarchive:
+        src: /tmp/guacamole-server.tar.gz
+        dest: /tmp/
+        remote_src: yes
+
+    - name: Compile and install Guacamole server
+      command: >
+        ./configure --with-systemd-dir=/etc/systemd/system/ && make && make install
+      args:
+        chdir: /tmp/guacamole-server.tar.gz
+
+    - name: Directory creation
+      file:
+        path: "{{ item }}"
+        state: directory
+      loop:
+        - /etc/guacamole/extensions
+        - /etc/guacamole/lib
+
+#    - name: Directory cleanup
+#      file:
+#        path: /tmp/guacamole-server.tar.gz
+#        state: absent
+

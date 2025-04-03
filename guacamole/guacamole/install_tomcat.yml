@@ -1,0 +1,35 @@
+---
+- name: Install Tomcat9 extension
+  hosts: guacamole_servers
+  become: true
+
+#  - tasks:
+#    - name: Update apt and install dependencies
+#      apt:
+#        name: "{{ item }}"
+#        state: latest
+#      loop:
+#        - tomcat9
+#        - tomcat9-admin
+#        - tomcat9-common
+#        - tomcat9-usertomcat9
+#        - tomcat9-admin
+#        - tomcat9-common
+#        - tomcat9-user
+
+
+    - name: Download Guacamole server source
+      get_url:
+        url: "https://downloads.apache.org/guacamole/1.5.5/binary/guacamole-1.5.5.war"
+        dest: /var/lib/tomcat9/webapps/guacamole.war
+
+    - name: restart tomcat9
+      service:
+        name: "{{ item }}"
+        state: restarted
+      loop:
+        - tomcat9
+        - guacd
+
+
+

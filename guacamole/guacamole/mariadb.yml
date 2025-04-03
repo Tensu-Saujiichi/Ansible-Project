@@ -1,0 +1,61 @@
+to---
+- name: MariaDB
+  hosts: guacamole_servers
+  gather_facts: true
+  become: true
+  vars_file: vars/mariadb.vars
+
+#  - tasks:
+#    - name: install mariadb
+#      apt:
+#        name:
+#          - mariadb-server
+#        state: latest
+
+    - name: start mariadb
+      service:
+        name: mariadb
+        enabled: true
+        state: started
+
+    - name: mysql_root_password
+      mysql_user:
+        login_user: root
+        login_password: ""
+        user: root
+        password: "{{ mysql_root_password }}"
+        #host: localhost
+        host_all: yes
+
+    - name: remove remote root
+      mysql_user:
+        login_user: root
+        login_password: "{{ mysql_root_password }}"
+        user: ""
+        host_all: yes
+        state: absent
+
+    - name: remove test database
+      mysql_db:
+        login_user: root
+        login_password: "{{ mysql_root_password }}"
+        name: "test"
+        state: absent
+
+    - name: adding guacamole database
+      mysql_db:
+        login_user: "root"
+        login_password: "{{ mysql_root_password }}"
+        name: "{{ database_guacamole }}"
+        state: present
+
+    - name: adding database user
+      mysql_user:
+        login_user: "root"
+        login_password: "{{ mysql_root_password }}"
+        user: "{{ db_user }}"
+        host: localhost
+        password: "{{ dbu_pwd }}"
+        priv: "{{ database_guacamole }}.*:ALL"
+        state: present
+
